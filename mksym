@@ -1,5 +1,5 @@
 #!/bin/sh
-canonical="$1"
+canonical=$(realpath "$1")
 target="$2"
 
 ln -s "$canonical" "$target"
