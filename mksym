@@ -5,4 +5,4 @@ target="$2"
 ln -s "$canonical" "$target"
 echo "$canonical":"$target" >> symlinks
 <symlinks sort -u >symlinks.new
-mv symlinks{.new,}
+mv symlinks.new symlinks
