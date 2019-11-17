@@ -1,0 +1,87 @@
+From df377ce0cd73cbee2440e549536be8bd235b70cd Mon Sep 17 00:00:00 2001
+From: NRottmann <Nils.Rottmann@tuhh.de>
+Date: Fri, 30 Jun 2017 11:17:29 +0200
+Subject: [PATCH] Adding descriptive text and Links to the HippoCampus
+ Homepage.
+
+---
+ models/hippocampus/hippocampus.sdf | 5 +++--
+ models/hippocampus/model.config    | 3 ++-
+ src/gazebo_uuv_plugin.cpp          | 7 +++++--
+ worlds/underwater.world            | 9 ++++++++-
+ 4 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/models/hippocampus/hippocampus.sdf b/models/hippocampus/hippocampus.sdf
+index 7c13a91f40..5bd0233864 100644
+--- a/models/hippocampus/hippocampus.sdf
++++ b/models/hippocampus/hippocampus.sdf
+@@ -1,8 +1,9 @@
+ <?xml version="1.0" ?>
+ <sdf version='1.5'>
+   <!--
+-      Add a model named hippocampus, start with the first link, the base (hippocampus without rotors). The pose is
+-      relative to the given frame ''.
++      Add a model named hippocampus, developed by the Technical University Hamburg-Harburg (TUHH),
++      start with the first link, the base (hippocampus without rotors). The pose is relative to the given frame.
++      https://www.tuhh.de/mum/forschung/forschungsgebiete-und-projekte/flow-field-estimation-with-a-swarm-of-auvs.html
+   -->
+   <model name='hippocampus'>
+     <link name='base_link'>
+diff --git a/models/hippocampus/model.config b/models/hippocampus/model.config
+index 6a1e995afa..1f93e322a2 100644
+--- a/models/hippocampus/model.config
++++ b/models/hippocampus/model.config
+@@ -10,6 +10,7 @@
+   </author>
+ 
+   <description>
+-    This is a model of a HippoCampus AUV from TUHH.
++    This is a model of a HippoCampus AUV from the Technical University Hamburg-Harburg (TUHH, Germany).
++    https://www.tuhh.de/mum/forschung/forschungsgebiete-und-projekte/flow-field-estimation-with-a-swarm-of-auvs.html
+   </description>
+ </model>
+diff --git a/src/gazebo_uuv_plugin.cpp b/src/gazebo_uuv_plugin.cpp
+index 64f54dfbba..6abc6ecb05 100644
+--- a/src/gazebo_uuv_plugin.cpp
++++ b/src/gazebo_uuv_plugin.cpp
+@@ -13,10 +13,13 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
+- * This scripts simulates underwater froces and torques for the hippocampus model.
+- *
+  */
+ 
++/*
++ * This scripts simulates underwater froces and torques for the hippocampus model. The HippoCampus is an autonomous
++ * underwater vehicle (AUV) designed by the Technical University Hamburg-Harburg (TUHH).
++ * https://www.tuhh.de/mum/forschung/forschungsgebiete-und-projekte/flow-field-estimation-with-a-swarm-of-auvs.html
++ */
+ 
+ 
+ #include "gazebo_uuv_plugin.h"
+diff --git a/worlds/underwater.world b/worlds/underwater.world
+index f091ad2f16..5ec2735d5a 100644
+--- a/worlds/underwater.world
++++ b/worlds/underwater.world
+@@ -1,12 +1,19 @@
+ <?xml version="1.0" ?>
+ <sdf version="1.5">
++
++  <!--
++    This is the underwater.world file which starts the Gazebo simulation based on the autonomous underwater vehicle
++    Hippocampus from the Technical University Hamburg-Harburg (TUHH).
++    https://www.tuhh.de/mum/forschung/forschungsgebiete-und-projekte/flow-field-estimation-with-a-swarm-of-auvs.html
++  -->
++
+   <world name="default">
+     <!-- A global light source -->
+     <!--include>
+       <uri>model://sun</uri>
+     </include-->
+ 
+-    <!-- Include the model of the Hippocampus -->
++    <!-- Include the model of the Hippocampus from TUHH.-->
+     <include>
+       <uri>model://hippocampus</uri>
+       <pose>0 0 0 0 0 0</pose>
