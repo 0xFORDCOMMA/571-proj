@@ -31,7 +31,7 @@
       <link name="body">
         <visual name="visual">
           <geometry>
-            <mesh><uri>model://coral-80x40.dae</uri></mesh>
+            <mesh><uri>model://ka-6_20x10.dae</uri></mesh>
           </geometry>
         </visual>
       </link>
