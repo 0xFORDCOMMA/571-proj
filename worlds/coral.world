@@ -115,14 +115,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file://coral-ka-6-centered.dae</uri>
+              <uri>file://coral-ka-6-scaled.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file://coral-ka-6-centered.dae</uri>
+              <uri>file://coral-ka-6-scaled.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>

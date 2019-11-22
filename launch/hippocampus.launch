@@ -16,7 +16,7 @@
 
     <arg name="est" default="lpe"/>
     <arg name="vehicle" default="hippocampus"/>
-    <arg name="world" default="$(find cse571_project)/worlds/reef.world"/>
+    <arg name="world" default="$(find cse571_project)/worlds/hippocampus.world"/>
     <arg name="sdf" default="$(find px4)/Tools/sitl_gazebo/models/$(arg vehicle)/$(arg vehicle).sdf"/>
 
     <arg name="rcS" default="$(find px4)/posix-configs/SITL/init/$(arg est)/$(arg vehicle)"/>
