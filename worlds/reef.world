@@ -9,9 +9,9 @@
 
   <world name="default">
     <!-- A global light source -->
-    <!--include>
+    <include>
       <uri>model://sun</uri>
-    </include-->
+    </include>
 
     <!--
         Include the model of the Hippocampus from TUHH.
@@ -21,16 +21,17 @@
 <!--
     <include>
       <uri>model://hippocampus</uri>
-      <pose>0 0 0 0 3.1415 -1.57075</pose>
-    </include>
--->
+      <pose>0 0 20 0 3.1415 -1.57075</pose>
+    </include> -->
+
+
     <model name="reef">
       <pose>0 0 0  0 0 0</pose>
       <static>true</static>
       <link name="body">
         <visual name="visual">
           <geometry>
-            <mesh><uri>file://small-ka-6.png</uri></mesh>
+            <mesh><uri>model://coral-80x40.dae</uri></mesh>
           </geometry>
         </visual>
       </link>

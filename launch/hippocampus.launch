@@ -1,4 +1,5 @@
 <launch>
+    <env name="GAZEBO_MODEL_PATH" value="$(find cse571_project)/models"/>
 
     <!--
         MAVROS posix SITL environment launch script modified for hippocam,pus from mavros_posix_sitl.
