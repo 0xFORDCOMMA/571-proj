@@ -5,9 +5,9 @@
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
     <arg name="z" default="-5"/>
-    <arg name="world" default="$(find cse571_project)/worlds/iris_reef.world"/>
+    <arg name="world" default="$(find finding_nemo)/worlds/iris_reef.world"/>
  
-    <include file="$(find cse571_project)/launch/2hipp.launch">
+    <include file="$(find finding_nemo)/launch/2hipp.launch">
         <arg name="vehicle" value="$(arg vehicle)"/>
         <arg name="x" value="$(arg x)"/>
         <arg name="y" value="$(arg y)"/>

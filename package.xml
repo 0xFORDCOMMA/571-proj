@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>cse571_project</name>
+  <name>finding_nemo</name>
   <version>0.0.0</version>
-  <description>Project template for CSE 571</description>
+  <description>Finding NEMO project for CSE 571</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

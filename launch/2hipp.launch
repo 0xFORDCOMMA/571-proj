@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <env name="GAZEBO_MODEL_PATH" value="$(find cse571_project)/models"/>
+    <env name="GAZEBO_MODEL_PATH" value="$(find finding_nemo)/models"/>
     <!-- MAVROS posix SITL environment launch script -->
     <!-- launches MAVROS, PX4 SITL, Gazebo environment, and spawns vehicle -->
     <!-- vehicle pose -->
@@ -13,7 +13,7 @@
     <!-- vehicle model and world -->
     <arg name="est" default="ekf2"/>
     <arg name="vehicle" default="hippocampus"/>
-    <arg name="world" default="$(find cse571_project)/worlds/reef.world"/>
+    <arg name="world" default="$(find finding_nemo)/worlds/reef.world"/>
     <arg name="sdf" default="$(find mavlink_sitl_gazebo)/models/$(arg vehicle)/$(arg vehicle).sdf"/>
     <!-- <arg name="sdf" default="$(find cse571_project)/models/hippocampus/hippocampus.sdf"/> -->
 
