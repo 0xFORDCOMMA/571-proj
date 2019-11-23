@@ -1,0 +1,11 @@
+1) I have provided you four files.
+2) 3 for APIs and  1 for search algorith.
+3) In search algorithm file heapque contains 4 items in which the last item is for the list of states that robot has travelled till now.
+4) you can run the command in following way to get the output.
+ step1-> roscore
+ step2-> rosrun search server.py -d 2 -n 2 -s 10
+ step3-> rosrun search search_algorithm.py -a algorithm
+
+5) I have kept a visited list in the algorithm right now but I can remove it. I will just have comment few lines in the code.
+
+
