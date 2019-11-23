@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <arg name="vehicle" default="iris"/>
+    <arg name="x" default="-7.63"/>
+    <arg name="y" default="-3.56"/>
+    <arg name="z" default="-1.45"/>
+ 
+    <include file="$(find cse571_project)/launch/2hipp.launch">
+        <arg name="vehicle" value="$(arg vehicle)"/>
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+    </include>
+
+</launch>

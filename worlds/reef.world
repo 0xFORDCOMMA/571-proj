@@ -34,11 +34,32 @@
             <mesh><uri>model://ka-6_20x10.dae</uri></mesh>
           </geometry>
         </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://ka-6_20x10.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
       </link>
     </model>
     <!-- Add physics -->
     <physics name='default_physics' default='0' type='ode'>
       <gravity>0 0 -9.8066</gravity>
+      <!-- <gravity>0 0 0</gravity> -->
       <ode>
         <solver>
           <type>quick</type>
