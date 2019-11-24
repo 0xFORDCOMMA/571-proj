@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-# encoding: utf-8
 
 
-from 571-proj.srv import *
+
+from group_13.srv import *
 import rospy
-from gen_maze import *
+from proj_maze import *
 import sys
 import argparse
 import time
@@ -13,21 +13,15 @@ mazeInfo = None
 
 def check_is_edge(edge, valueFlag):
 	
-	global mazeInfo
-	#invalid_edges = mazeInfo[1]
+	
+	
 	if valueFlag == "changedValuesLater":
-		if edge[2] < mazeInfo[0] or edge[2] > 6*0.5 or edge[3] < mazeInfo[0] or edge[3] > mazeInfo[1]*0.5:
+		if edge[2] < 0 or edge[2] >6  or edge[3] < 0 or edge[3] > 4:
 			return False
 	elif valueFlag == "changedValuesBefore":
-		if edge[0] < mazeInfo[0] or edge[0] >6*0.5 or edge[1] < mazeInfo[0] or edge[1] > mazeInfo[1]*0.5:
+		if edge[0] < 0 or edge[0] >6 or edge[1] < 0 or edge[1] > 4:
 			return False
-	'''
-	if edge in invalid_edges:
-		return False
-	'''
-	else:
-		return True
-
+	
 def handle_get_successor(req):
 	
 	global mazeInfo
@@ -92,20 +86,12 @@ def handle_get_successor(req):
 	return GetSuccessorResponse(state_x, state_y, state_direction, state_cost, action_list)
   
 
-def handle_get_initial_state():
-	
-	global mazeInfo
-
-	initial_state = mazeInfo[0]
-	return GetInitialStateResponse(initial_state[0],initial_state[0],initial_state[2])
 
 
-
-def proj_server():
+def project_server():
     
     rospy.init_node('get_successor_server')
     rospy.Service('get_successor', GetSuccessor, handle_get_successor)
-    rospy.Service('get_initial_state', GetInitialState, handle_get_initial_state)
     
     print "Ready!"
     rospy.spin()
@@ -114,5 +100,5 @@ if __name__ == "__main__":
     
     my_maze = Maze()
     
-    mazeInfo = my_maze.generate_maze(4)
+    mazeInfo = my_maze.generate_maze()
     project_server()
