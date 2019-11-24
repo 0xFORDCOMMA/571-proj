@@ -11,7 +11,7 @@
     <arg name="P" default="0"/>
     <arg name="Y" default="0"/>
     <!-- vehicle model and world -->
-    <arg name="est" default="ekf2"/>
+    <arg name="est" default="lpe"/>
     <arg name="vehicle" default="hippocampus"/>
     <arg name="world" default="$(find group_13)/worlds/reef.world"/>
     <arg name="sdf" default="$(find group_13)/models/$(arg vehicle)/$(arg vehicle).sdf"/>

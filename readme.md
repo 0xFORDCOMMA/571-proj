@@ -1,3 +1,16 @@
+
+## Starting Camera Viewer
+cd catkin_ws/src/group_13
+rqt --perspective-file iris.perspective
+
+
+
+
+
+
+
+##STUFF FROM THE TEMPLATE
+
 ## Running the Demo
 
 To start the demo, run the following commands in order:

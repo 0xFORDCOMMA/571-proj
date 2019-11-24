@@ -121,37 +121,43 @@ home = vehicle.location.global_relative_frame
 #x & y seem to be backwards
 
 #takeoff to starting point
-wp = get_location_offset_meters(home, -3, -7.5, 4.25);
+wp = get_location_offset_meters(home, 0, 0, 10);
 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
 cmds.add(cmd)
 print "current location %s" % vehicle.location.global_relative_frame
 
 # move to 2nd point
-wp = get_location_offset_meters(home, -3, -4.5, 4.75);
+wp = get_location_offset_meters(home, 3, 2.5, 4.25);
+cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
+cmds.add(cmd)
+print "current location %s" % vehicle.location.global_relative_frame
+
+# move to 2nd point
+wp = get_location_offset_meters(home, 3, 5.5, 4.75);
 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
 cmds.add(cmd)
 print "current location %s" % vehicle.location.global_relative_frame
 
 # move to 3rd point
-wp = get_location_offset_meters(home, -3, -1.5, 6.25);
+wp = get_location_offset_meters(home, 3, 8.5, 6.25);
 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
 cmds.add(cmd)
 print "current location %s" % vehicle.location.global_relative_frame
 
 # move to 4th point
-wp = get_location_offset_meters(home, -3, 1.5, 5.75);
+wp = get_location_offset_meters(home, 3, 11.5, 5.75);
 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
 cmds.add(cmd)
 print "current location %s" % vehicle.location.global_relative_frame
 
 # move to 5th point
-wp = get_location_offset_meters(home, -3, 4.5, 4.875);
+wp = get_location_offset_meters(home, 3, 14.5, 4.875);
 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
 cmds.add(cmd)
 print "current location %s" % vehicle.location.global_relative_frame
 
 # move to 6th point
-wp = get_location_offset_meters(home, -3, 7.5, 4.675);
+wp = get_location_offset_meters(home, 3, 17.5, 4.675);
 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
 cmds.add(cmd)
 print "current location %s" % vehicle.location.global_relative_frame
