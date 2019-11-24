@@ -3,7 +3,7 @@
 
 import sys
 import rospy
-from 571-proj.srv import *
+from group_13.srv import *
 import collections
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
@@ -19,64 +19,68 @@ import copy
 class State:
     
     
-    def __init__(self,x,y,orientation):
+	def __init__(self,x,y,orientation):
         
-        self.x  = x 
-        self.y = y
-        self.orientation = orientation
+		self.x  = x
+		self.y = y
+		self.orientation = orientation
 
-    def __eq__(self, other):
-        if self.x == other.x and self.y == other.y :
-            return True
-        else:
-            return False
-
-    def __repr__(self):
-        return "({}, {}, {})".format(str(self.x), str(self.y), str(self.orientation))
+	def __eq__(self, other):
+		if self.x == other.x and self.y == other.y :
+		    return True
+		else:
+		    return False
+	def __repr__(self):
+        	return "({}, {}, {})".format(str(self.x), str(self.y), str(self.orientation))
 
 class Helper:
-
-	 def get_initial_state():
-        
-		rospy.wait_for_service('get_initial_state')
-		try:
-		    get_initial_state = rospy.ServiceProxy('get_initial_state', GetInitialState)
-		    response = get_initial_state()
-		    return State(response.x, response.y, response.direction)
-
-		except rospy.ServiceException, e:
-		     print "Service call failed: %s" % e
-
+	def get_initial_state():
+		
+		return State(0,0,'East')
+        	
 	def get_successor (self, curr_state):
         
 		rospy.wait_for_service('get_successor')
 
 		try:
-		    get_successor = rospy.ServiceProxy('get_successor', GetSuccessor)
-		    response = get_successor(curr_state.x, curr_state.y, curr_state.orientation)
-		    states = collections.OrderedDict()
+			get_successor = rospy.ServiceProxy('get_successor', GetSuccessor)
+		    	response = get_successor(curr_state.x, curr_state.y, curr_state.orientation)
+		    	states = collections.OrderedDict()
 
-		    for i in range(4):
-		        states[response.action[i]] = (State(response.x[i], response.y[i], response.direction[i]), response.g_cost[i])
-		    return states
+			for i in range(len(response)):
+		        	states[response.action[i]] = (State(response.x[i], response.y[i], response.direction[i]), response.g_cost[i])
+			return states
 		
 		except rospy.ServiceException, e:
-		    print "Service call failed: %s" % e
+			print "Service call failed: %s" % e
 
 	def get_actions(self):
         
         	return ["TurnCW", "TurnCCW", "MoveF", "MoveB"]
 	
-	def get_all_states():
+	def get_all_states(self):
 		
 		all_states=[]
-		count=0
-		for i in range(0,6):
-			for j in range(0,4):
-				all_states[count]=State(i,j)
-				count+=1
+		for i in range(0,7):
+			for j in range(0,5):
+				all_states.append((i,j))
 		return all_states
 
+	def is_goal_state(self,visited)
+		
+		all_state=self.get_all_states()
+		dup=all_state
+		for st in visited:
+			if(st in dup):
+				dup.remove(st)
+		if not dup:
+			return True
+		else:
+			return False
+								
+
 	def usage(self):
-        return "%s [x y]" % sys.argv[0]
+        	return "%s [x y]" % sys.argv[0]
+
+
 

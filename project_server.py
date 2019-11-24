@@ -4,12 +4,12 @@
 
 from group_13.srv import *
 import rospy
-
+from proj_maze import *
 import sys
 import argparse
 import time
 
-
+mazeInfo = None
 
 def check_is_edge(edge, valueFlag):
 	
@@ -24,7 +24,7 @@ def check_is_edge(edge, valueFlag):
 	
 def handle_get_successor(req):
 	
-	
+	global mazeInfo
 	action_list = ["TurnCW", "TurnCCW", "MoveB", "MoveF"]
 	direction_list = ["NORTH", "EAST", "SOUTH", "WEST"]
 	state_x = []
@@ -93,5 +93,7 @@ def project_server():
 
 if __name__ == "__main__":
     
+    my_maze = Maze()
     
+    mazeInfo = my_maze.generate_maze()
     project_server()
