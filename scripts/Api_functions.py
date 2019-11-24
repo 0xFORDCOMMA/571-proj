@@ -21,7 +21,7 @@ class State:
     
 	def __init__(self,x,y,orientation):
         
-		self.x  = x 
+		self.x  = x
 		self.y = y
 		self.orientation = orientation
 
@@ -34,7 +34,7 @@ class State:
         	return "({}, {}, {})".format(str(self.x), str(self.y), str(self.orientation))
 
 class Helper:
-	def get_initial_state(self):
+	def get_initial_state():
 		
 		return State(0,0,'East')
         	
@@ -58,16 +58,29 @@ class Helper:
         
         	return ["TurnCW", "TurnCCW", "MoveF", "MoveB"]
 	
-	def get_all_states():
+	def get_all_states(self):
 		
 		all_states=[]
-		count=0
-		for i in range(0,6):
-			for j in range(0,4):
-				all_states[count]=State(i,j)
-				count+=1
+		for i in range(0,7):
+			for j in range(0,5):
+				all_states.append((i,j))
 		return all_states
+
+	def is_goal_state(self,visited)
+		
+		all_state=self.get_all_states()
+		dup=all_state
+		for st in visited:
+			if(st in dup):
+				dup.remove(st)
+		if not dup:
+			return True
+		else:
+			return False
+								
 
 	def usage(self):
         	return "%s [x y]" % sys.argv[0]
+
+
 
