@@ -72,12 +72,7 @@ def handle_get_successor(req):
 		else:
 			isValidEdge = check_is_edge((x_cord, y_cord, req.x, req.y), "changedValuesBefore")
 
-		if not isValidEdge:
-			state_x.append(-1)
-			state_y.append(-1)
-			state_direction.append(direction)
-			state_cost.append(-1)
-		else:
+		if isValidEdge:
 			state_x.append(x_cord)
 			state_y.append(y_cord)
 			state_direction.append(direction)
