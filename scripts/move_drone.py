@@ -38,7 +38,7 @@ def get_location_offset_meters(original_location, dNorth, dEast, alt):
     return LocationGlobal(newlat, newlon,original_location.alt+alt)
 
 def get_offsets(grid, x, y):
-   return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z'] 
+   return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z']+5.5)
 
 def init_drone(grid):
     connection_string = '127.0.0.1:14540'
@@ -158,7 +158,12 @@ class moveDrone:
 
         elif action == "TurnCW" or action == "TurnCCW":
             x, y = self.loc[0], self.loc[1]
-            wp = get_location_offset_meters(self.home, float(self.grid[x][y]['x'])+6, float(self.grid[x][y]['y'])+10, float(self.grid[x][y]['z'])+5.5)
+            res_orientations = {'north': {'TurnCW': 'east', 'TurnCCW': 'west'},
+                                'south': {'TurnCW': 'west', 'TurnCCW': 'east'},
+                                'east':  {'TurnCW': 'south','TurnCCW': 'north'},
+                                'west':  {'TurnCW': 'north','TurnCCW': 'south'}}
+            self.loc = (x, y, res_orientations[self.loc[2]][action])
+            wp = get_location_offset_meters(self.home, *get_offsets(self.grid, x, y))
             Command(0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, 1, 90, 0, 1 if action == "TurnCW" else -1, 1, wp.lat, wp.lon, wp.alt)
 
         else:
@@ -167,11 +172,6 @@ class moveDrone:
         if len(self.actions) == 0:
             self.status_publisher.publish(self.free)
 
-
-    def pose_callback(self,data):
-        self.pose = data.pose.pose
-
-    
 
 if __name__ == "__main__":
     try:
