@@ -124,7 +124,7 @@ class moveDrone:
         self.free = String(data = "next")
         self.rate = rospy.Rate(30)
         self.root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-        with open(self.root_path + 'reef.json', 'r') as f:
+        with open(self.root_path + '/reef.json', 'r') as f:
             self.grid = json.load(f)
         self.vehicle, self.home = init_drone(self.grid)
         print("Ready!")
