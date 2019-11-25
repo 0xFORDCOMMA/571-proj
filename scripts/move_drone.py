@@ -143,14 +143,16 @@ class moveDrone:
 
             deltas = {'MoveF': {'north': (0,1),  'south': (0,-1), 'east': (1,0),  'west': (-1,0)},
                       'MoveB': {'north': (0,-1), 'south': (0,1),  'east': (-1,0), 'west': (1,0)}  }
-            self.loc = tuple([sum(dim) for dim in zip(current_loc[:2], deltas[action][orientation])] + [orientation])
-            x, y = self.loc[0], self.loc[1]
+            new_loc = tuple([sum(dim) for dim in zip(current_loc[:2], deltas[action][orientation])] + [orientation])
+            x, y = new_loc[0], new_loc[1]
 
             # Load commands
             cmds = self.vehicle.commands
             #cmds.clear()
 
             if 0 <= x < 6 and 0 <= y < 4:
+                print "Taking action %s to go from %s to %s\n" % (action, current_loc, new_loc)
+                self.loc = new_loc
                 wp = get_location_offset_meters(self.home, *get_offsets(self.grid, x, y))
                 cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
                 cmds.add(cmd)
@@ -166,7 +168,9 @@ class moveDrone:
                                 'south': {'TurnCW': 'west', 'TurnCCW': 'east'},
                                 'east':  {'TurnCW': 'south','TurnCCW': 'north'},
                                 'west':  {'TurnCW': 'north','TurnCCW': 'south'}}
-            self.loc = (x, y, res_orientations[self.loc[2]][action])
+            new_loc = (x, y, res_orientations[self.loc[2]][action])
+            print "Taking action %s to go from %s to %s\n" % (action, current_loc, new_loc)
+            self.loc = new_loc
             wp = get_location_offset_meters(self.home, *get_offsets(self.grid, x, y))
             Command(0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, 1, 90, 0, 1 if action == "TurnCW" else -1, 1, wp.lat, wp.lon, wp.alt)
 
