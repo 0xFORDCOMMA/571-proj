@@ -149,7 +149,7 @@ class moveDrone:
             cmds = self.vehicle.commands
             #cmds.clear()
 
-            wp = get_location_offset_meters(home, *get_offsets(grid, x, y))
+            wp = get_location_offset_meters(self.home, *get_offsets(grid, x, y))
             cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
             cmds.add(cmd)
 
