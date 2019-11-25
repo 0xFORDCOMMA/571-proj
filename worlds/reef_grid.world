@@ -35,7 +35,7 @@
           </geometry>
         </visual>
 
-        <!-- <collision name='collision'>
+        <collision name='collision'>
           <geometry>
             <mesh>
               <uri>model://ka-6_20x10.dae</uri>
@@ -54,59 +54,11 @@
               <ode/>
             </friction>
           </surface>
-        </collision> -->
-      </link>
-    </model>
-    <model name='ground_plane'>
-      <pose>-10 -6 -5  0 0 0</pose>
-      <static>1</static>
-      <link name='link'>
-        <collision name='collision'>
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>1 1</size>
-            </plane>
-          </geometry>
-          <surface>
-            <friction>
-              <ode>
-                <mu>100</mu>
-                <mu2>50</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
         </collision>
-        <visual name='visual'>
-          <cast_shadows>0</cast_shadows>
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>1 1</size>
-            </plane>
-          </geometry>
-          <material>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Grey</name>
-            </script>
-          </material>
-        </visual>
-        <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
-        <gravity>1</gravity>
       </link>
     </model>
 
-     <!-- Add Grid Points -->
+    <!-- Add Grid Points -->
     <model name='unit_sphere_0_0'>
         <pose frame=''>-7.5 -3 -1.25 0 0 0</pose>
         <link name='unit_sphere_0_0::link'>
@@ -634,6 +586,7 @@
           <gravity>0</gravity>
         </link>
       </model>
+
     <!-- Add physics -->
     <physics name='default_physics' default='0' type='ode'>
       <gravity>0 0 -9.8066</gravity>
