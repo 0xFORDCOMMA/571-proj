@@ -38,12 +38,12 @@ def handle_get_successor(req):
 		if action == 'TurnCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index+1)%4]
-			g_cost = 2
+			
 
 		elif action == 'TurnCCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index-1)%4]
-			g_cost = 2
+			
 
 		elif action == 'MoveF':
 			if direction == "NORTH":
@@ -65,7 +65,7 @@ def handle_get_successor(req):
 				y_cord += 1
 			elif direction == "WEST":
 				x_cord += 1
-			g_cost = 3
+			
 		
 		if req.x <= x_cord and req.y <= y_cord:
 			isValidEdge = check_is_edge((req.x, req.y, x_cord, y_cord), "changedValuesLater")

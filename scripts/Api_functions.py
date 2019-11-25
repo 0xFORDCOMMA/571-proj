@@ -15,6 +15,8 @@ from gazebo_msgs.msg import ModelState
 from geometry_msgs.msg import Quaternion
 from pid import PID
 import copy
+import os
+import json
 
 class State:
     
@@ -34,7 +36,29 @@ class State:
         	return "({}, {}, {})".format(str(self.x), str(self.y), str(self.orientation))
 
 class Helper:
-	def get_initial_state():
+
+	def get_cost(self,curr_state,succ_state):
+		root_path=os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+		with open(root_path + "/reef.json") as reef_file:
+			try:
+				reef_obj=json.load(reef_file)
+			except (ValueError, KeyError, TypeError):
+               			print "JSON error"
+		x1=float(reef_obj[curr_state.x][curr_state.y]["x"])
+		y1=float(reef_obj[curr_state.x][curr_state.y]["y"])
+		z1=float(reef_obj[curr_state.x][curr_state.y]["z"])
+
+		x2=float(reef_obj[succ_state.x][succ_state.y]["x"])
+		y2=float(reef_obj[succ_state.x][succ_state.y]["y"])
+		z2=float(reef_obj[succ_state.x][succ_state.y]["z"])
+		
+					
+
+		g_cost=math.sqrt(pow((x1-x2),2)+pow((y1-y2),2)+pow((z1-z2),2))
+		
+		return g_cost
+
+	def get_initial_state(self):
 		
 		return State(0,0,'East')
         	
@@ -66,7 +90,7 @@ class Helper:
 				all_states.append((i,j))
 		return all_states
 
-	def is_goal_state(self,visited)
+	def is_goal_state(self,visited):
 		
 		all_state=self.get_all_states()
 		dup=all_state
@@ -82,5 +106,7 @@ class Helper:
 	def usage(self):
         	return "%s [x y]" % sys.argv[0]
 
-
-
+h=Helper()
+init=h.get_initial_state()
+succ=State(3,2,'West')
+h.get_cost(init,succ)
