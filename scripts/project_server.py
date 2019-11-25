@@ -3,6 +3,7 @@
 
 
 from group_13.srv import *
+import gen_init_state
 import rospy
 import random
 import sys
@@ -21,6 +22,14 @@ def check_is_edge(edge, valueFlag):
 	elif valueFlag == "changedValuesBefore":
 		if edge[0] < 0 or edge[0] >6 or edge[1] < 0 or edge[1] > 4:
 			return False
+
+
+def handle_get_initial_state(req):
+	
+	global init_state
+
+	initial_state = init_state
+	return GetInitialStateResponse(initial_state.x,initial_state.y,initial_state.direction)
 	
 def handle_get_successor(req):
 	
@@ -75,30 +84,22 @@ def handle_get_successor(req):
 			state_x.append(x_cord)
 			state_y.append(y_cord)
 			state_direction.append(direction)
+		else:
+			action_list.remove(action)
 			
 
-	return GetSuccessorResponse(state_x, state_y, state_direction, state_cost, action_list)
+	return GetSuccessorResponse(state_x, state_y, state_direction, action_list)
   
-
-def handle_get_initial_state(req):
-	
-	direction_list = ["NORTH", "EAST", "SOUTH", "WEST"]
-	x=random.randrange(0,7,1)
-	y=random.randrange(0,5,1)
-
-	direction=random.choice(direction_list)
-	initial_state = [x,y,direction]
-	return GetInitialStateResponse(initial_state[0],initial_state[1],initial_state[2])
 
 def project_server():
     
     rospy.init_node('get_successor_server')
     rospy.Service('get_successor', GetSuccessor, handle_get_successor)
-    rospy.Service('get_initial_state', GetInitialState, handle_get_initial_state)
+    rospy.Service('get_initial_state', GetInitialState, handle_initial_state)
     print "Ready!"
     rospy.spin()
 
 if __name__ == "__main__":
     
-    
+    init_state=get_rand_initial_state()
     project_server()

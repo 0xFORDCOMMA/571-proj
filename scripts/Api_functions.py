@@ -25,7 +25,7 @@ class State:
         
 		self.x  = x
 		self.y = y
-		self.orientation = orientation
+		self.direction = orientation
 
 	def __eq__(self, other):
 		if self.x == other.x and self.y == other.y :
