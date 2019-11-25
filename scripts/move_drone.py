@@ -11,15 +11,8 @@ __contact__ = "aair.lab@asu.edu"
 __docformat__ = 'reStructuredText'
 
 import rospy
-from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 import math
-from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Pose
-import tf
-from gazebo_msgs.msg import ModelState
-from geometry_msgs.msg import Quaternion
-from pid import PID
 import copy, json
 from dronekit import connect, Command, LocationGlobal
 from pymavlink import mavutil
