@@ -58,9 +58,9 @@ def init_drone():
     home_position_set = False
 
     #wait for a home position lock
-    while not home_position_set:
-        print "Waiting for home position..."
-        time.sleep(1)
+#    while not home_position_set:
+#        print "Waiting for home position..."
+#        time.sleep(1)
 
     print "Home Location Set %s" % vehicle.home_location
 
@@ -79,7 +79,7 @@ def init_drone():
     cmds = vehicle.commands
     cmds.clear()
 
-    start = copy(vehicle.location.global_frame)
+    start = copy.copy(vehicle.location.global_frame)
     print "start location %s" % start
 
     home = vehicle.location.global_relative_frame
