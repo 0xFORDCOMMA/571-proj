@@ -38,7 +38,15 @@ def get_location_offset_meters(original_location, dNorth, dEast, alt):
     return LocationGlobal(newlat, newlon,original_location.alt+alt)
 
 def get_offsets(grid, x, y):
-   return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z'])+5.5
+    if x < 0:
+        x = 0
+    elif x >= 6:
+        x = 6
+    if y < 0:
+        y = 0
+    elif y >= 4:
+        y = 4
+    return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z'])+5.5
 
 def init_drone(grid):
     connection_string = '127.0.0.1:14540'
