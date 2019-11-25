@@ -122,30 +122,30 @@ def init_drone():
 
 
 class moveDrone:
-	def __init__(self):
-		rospy.init_node('move_drone',anonymous = True)
-		self.actions = String()
-		self.loc = None
-		self.action_subscriber = rospy.Subscriber('/actions',String,self.callback_actions)
-		self.status_publisher = rospy.Publisher("/status",String,queue_size = 10)
-		self.free = String(data = "next")
-		self.rate = rospy.Rate(30)
+    def __init__(self):
+        rospy.init_node('move_drone',anonymous = True)
+        self.actions = String()
+        self.loc = None
+        self.action_subscriber = rospy.Subscriber('/actions',String,self.callback_actions)
+        self.status_publisher = rospy.Publisher("/status",String,queue_size = 10)
+        self.free = String(data = "next")
+        self.rate = rospy.Rate(30)
         with open('reef.json', 'r') as f:
             self.grid = json.load(f)
         self.vehicle, self.home = init_drone()
-		print("Ready!")
-		rospy.spin()
+        print("Ready!")
+        rospy.spin()
 
-	def callback_actions(self,data):
-		self.actions = data.data.split("_")
-		self.rate.sleep()
-		self.execute_next()
+    def callback_actions(self,data):
+        self.actions = data.data.split("_")
+        self.rate.sleep()
+        self.execute_next()
 
-	def execute_next(self):
-		action = self.actions.pop(0)
-		direction = None
-		if action == "MoveF" or action == "MoveB":
-			current_loc = self.loc
+    def execute_next(self):
+        action = self.actions.pop(0)
+        direction = None
+        if action == "MoveF" or action == "MoveB":
+            current_loc = self.loc
             orientation = current_loc[2]            
 
             deltas = {'MoveF': {'north': (0,1),  'south': (0,-1), 'east': (1,0),  'west': (-1,0)},
@@ -163,25 +163,25 @@ class moveDrone:
             cmds.upload()
             time.sleep(2)
 
-		elif action == "TurnCW" or action == "TurnCCW":
+        elif action == "TurnCW" or action == "TurnCCW":
             x, y = self.loc[0], self.loc[1]
             wp = get_location_offset_meters(start, self.grid[x][y]['x'], self.grid[x][y]['y'], self.grid[x][y]['z']);
             Command(0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, 1, 90, 0, 1 if action == "TurnCW" else -1, 1, wp.lat, wp.lon, wp.alt)
 
-		else:
-			print "Invalid action"
-			exit(-1)
-		if len(self.actions) == 0:
-			self.status_publisher.publish(self.free)
+        else:
+            print "Invalid action"
+            exit(-1)
+        if len(self.actions) == 0:
+            self.status_publisher.publish(self.free)
 
 
-	def pose_callback(self,data):
-		self.pose = data.pose.pose
+    def pose_callback(self,data):
+        self.pose = data.pose.pose
 
-	
+    
 
 if __name__ == "__main__":
-	try:
-		moveDrone()
-	except rospy.ROSInterruptException:
-		pass
+    try:
+        moveDrone()
+    except rospy.ROSInterruptException:
+        pass
