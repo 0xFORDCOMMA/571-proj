@@ -37,6 +37,9 @@ def get_location_offset_meters(original_location, dNorth, dEast, alt):
     newlon = original_location.lon + (dLon * 180/math.pi)
     return LocationGlobal(newlat, newlon,original_location.alt+alt)
 
+def get_offsets(grid, x, y):
+   return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z'] 
+
 def init_drone(grid):
     connection_string = '127.0.0.1:14540'
     MAV_MODE_AUTO = 4
@@ -88,7 +91,7 @@ def init_drone(grid):
     cmds.add(cmd)
 
     # TODO: Move to actual starting position
-    wp = get_location_offset_meters(home, float(grid[0][0]['x'])+6, float(grid[0][0]['y'])+10, float(grid[0][0]['z'])+5.5)
+    wp = get_location_offset_meters(home, *get_offsets(grid, 0, 0))
     cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
     cmds.add(cmd)
 
@@ -146,7 +149,7 @@ class moveDrone:
             cmds = self.vehicle.commands
             #cmds.clear()
 
-            wp = get_location_offset_meters(self.home, float(self.grid[x][y]['x'])+6, float(self.grid[x][y]['y'])+10, float(self.grid[x][y]['z'])+5.5)
+            wp = get_location_offset_meters(home, *get_offsets(grid, x, y))
             cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
             cmds.add(cmd)
 
