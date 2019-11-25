@@ -62,6 +62,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    GetInitialState.srv
    GetSuccessor.srv
+   GetRandInitialState.srv
    RemoveBlockedEdgeMsg.srv
    GetActions.srv
    IsTerminalState.srv
