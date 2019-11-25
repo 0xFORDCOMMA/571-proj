@@ -13,7 +13,7 @@ __docformat__ = 'reStructuredText'
 import rospy
 from std_msgs.msg import String
 import math
-import copy, json
+import copy, json, time
 from dronekit import connect, Command, LocationGlobal
 from pymavlink import mavutil
 
