@@ -4,12 +4,12 @@
 
 from group_13.srv import *
 import rospy
-from proj_maze import *
+import random
 import sys
 import argparse
 import time
 
-mazeInfo = None
+
 
 def check_is_edge(edge, valueFlag):
 	
@@ -24,13 +24,13 @@ def check_is_edge(edge, valueFlag):
 	
 def handle_get_successor(req):
 	
-	global mazeInfo
+	
 	action_list = ["TurnCW", "TurnCCW", "MoveB", "MoveF"]
 	direction_list = ["NORTH", "EAST", "SOUTH", "WEST"]
 	state_x = []
 	state_y = []
 	state_direction = []
-	state_cost = []
+	
 	
 	for action in action_list:
 		#Checking requested action and making changes in states
@@ -38,12 +38,12 @@ def handle_get_successor(req):
 		if action == 'TurnCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index+1)%4]
-			g_cost = 2
+			
 
 		elif action == 'TurnCCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index-1)%4]
-			g_cost = 2
+			
 
 		elif action == 'MoveF':
 			if direction == "NORTH":
@@ -54,8 +54,7 @@ def handle_get_successor(req):
 				y_cord -= 1
 			elif direction == "WEST":
 				x_cord -= 1
-			g_cost = 1
-
+			
 		elif action == 'MoveB':
 			if direction == "NORTH":
 				y_cord -=1
@@ -65,7 +64,7 @@ def handle_get_successor(req):
 				y_cord += 1
 			elif direction == "WEST":
 				x_cord += 1
-			g_cost = 3
+			
 		
 		if req.x <= x_cord and req.y <= y_cord:
 			isValidEdge = check_is_edge((req.x, req.y, x_cord, y_cord), "changedValuesLater")
@@ -76,24 +75,30 @@ def handle_get_successor(req):
 			state_x.append(x_cord)
 			state_y.append(y_cord)
 			state_direction.append(direction)
-			state_cost.append(g_cost)
+			
 
 	return GetSuccessorResponse(state_x, state_y, state_direction, state_cost, action_list)
   
 
+def handle_get_initial_state(req):
+	
+	direction_list = ["NORTH", "EAST", "SOUTH", "WEST"]
+	x=random.randrange(0,7,1)
+	y=random.randrange(0,5,1)
 
+	direction=random.choice(direction_list)
+	initial_state = [x,y,direction]
+	return GetInitialStateResponse(initial_state[0],initial_state[1],initial_state[2])
 
 def project_server():
     
     rospy.init_node('get_successor_server')
     rospy.Service('get_successor', GetSuccessor, handle_get_successor)
-    
+    rospy.Service('get_initial_state', GetInitialState, handle_get_initial_state)
     print "Ready!"
     rospy.spin()
 
 if __name__ == "__main__":
     
-    my_maze = Maze()
     
-    mazeInfo = my_maze.generate_maze()
     project_server()

@@ -60,7 +60,15 @@ class Helper:
 
 	def get_initial_state(self):
 		
-		return State(0,0,'East')
+		#return State(0,0,'East')
+		rospy.wait_for_service('get_initial_state')
+		try:
+		    get_initial_state = rospy.ServiceProxy('get_initial_state', GetInitialState)
+		    response = get_initial_state()
+		    return State(response.x, response.y, response.direction)
+
+		except rospy.ServiceException, e:
+		     print "Service call failed: %s" % e
         	
 	def get_successor (self, curr_state):
         
