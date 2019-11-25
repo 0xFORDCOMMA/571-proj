@@ -80,7 +80,7 @@ class Helper:
 		    	states = collections.OrderedDict()
 
 			for i in range(len(response)):
-		        	states[response.action[i]] = (State(response.x[i], response.y[i], response.direction[i]), response.g_cost[i])
+		        	states[response.action[i]] = (State(response.x[i], response.y[i], response.direction[i]))
 			return states
 		
 		except rospy.ServiceException, e:
