@@ -95,7 +95,7 @@ def project_server():
     
     rospy.init_node('get_successor_server')
     rospy.Service('get_successor', GetSuccessor, handle_get_successor)
-    rospy.Service('get_initial_state', GetInitialState, handle_initial_state)
+    rospy.Service('get_initial_state', GetInitialState, handle_get_initial_state)
     print "Ready!"
     rospy.spin()
 
