@@ -38,14 +38,6 @@ def get_location_offset_meters(original_location, dNorth, dEast, alt):
     return LocationGlobal(newlat, newlon,original_location.alt+alt)
 
 def get_offsets(grid, x, y):
-    if x < 0:
-        x = 0
-    elif x >= 6:
-        x = 6
-    if y < 0:
-        y = 0
-    elif y >= 4:
-        y = 4
     return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z'])+5.5
 
 def init_drone(grid):
@@ -153,16 +145,20 @@ class moveDrone:
                       'MoveB': {'north': (0,-1), 'south': (0,1),  'east': (-1,0), 'west': (1,0)}  }
             self.loc = tuple([sum(dim) for dim in zip(current_loc[:2], deltas[action][orientation])] + [orientation])
             x, y = self.loc[0], self.loc[1]
+
             # Load commands
             cmds = self.vehicle.commands
             #cmds.clear()
 
-            wp = get_location_offset_meters(self.home, *get_offsets(self.grid, x, y))
-            cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
-            cmds.add(cmd)
+            if 0 <= x < 6 and 0 <= y < 4:
+                wp = get_location_offset_meters(self.home, *get_offsets(self.grid, x, y))
+                cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
+                cmds.add(cmd)
 
-            cmds.upload()
-            time.sleep(2)
+                cmds.upload()
+                time.sleep(2)
+            else:
+                print "Attempted to move out of grid.\n"
 
         elif action == "TurnCW" or action == "TurnCCW":
             x, y = self.loc[0], self.loc[1]
