@@ -4,12 +4,12 @@
 
 from group_13.srv import *
 import rospy
-
+from proj_maze import *
 import sys
 import argparse
 import time
 
-
+mazeInfo = None
 
 def check_is_edge(edge, valueFlag):
 	
@@ -24,7 +24,7 @@ def check_is_edge(edge, valueFlag):
 	
 def handle_get_successor(req):
 	
-	
+	global mazeInfo
 	action_list = ["TurnCW", "TurnCCW", "MoveB", "MoveF"]
 	direction_list = ["NORTH", "EAST", "SOUTH", "WEST"]
 	state_x = []
@@ -38,12 +38,12 @@ def handle_get_successor(req):
 		if action == 'TurnCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index+1)%4]
-			
+			g_cost = 2
 
 		elif action == 'TurnCCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index-1)%4]
-			
+			g_cost = 2
 
 		elif action == 'MoveF':
 			if direction == "NORTH":
@@ -65,7 +65,7 @@ def handle_get_successor(req):
 				y_cord += 1
 			elif direction == "WEST":
 				x_cord += 1
-			
+			g_cost = 3
 		
 		if req.x <= x_cord and req.y <= y_cord:
 			isValidEdge = check_is_edge((req.x, req.y, x_cord, y_cord), "changedValuesLater")
@@ -93,5 +93,7 @@ def project_server():
 
 if __name__ == "__main__":
     
+    my_maze = Maze()
     
+    mazeInfo = my_maze.generate_maze()
     project_server()
