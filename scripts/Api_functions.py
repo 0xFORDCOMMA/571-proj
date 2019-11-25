@@ -114,7 +114,4 @@ class Helper:
 	def usage(self):
         	return "%s [x y]" % sys.argv[0]
 
-h=Helper()
-init=h.get_initial_state()
-succ=State(3,2,'West')
-h.get_cost(init,succ)
+
