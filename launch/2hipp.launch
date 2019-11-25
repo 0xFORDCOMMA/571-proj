@@ -13,7 +13,7 @@
     <!-- vehicle model and world -->
     <arg name="est" default="lpe"/>
     <arg name="vehicle" default="hippocampus"/>
-    <arg name="world" default="$(find group_13)/worlds/reef.world"/>
+    <arg name="world" default="$(find group_13)/worlds/reef_grid.world"/>
     <arg name="sdf" default="$(find group_13)/models/$(arg vehicle)/$(arg vehicle).sdf"/>
     <!-- <arg name="sdf" default="$(find group_13)/models/hippocampus/hippocampus.sdf"/> -->
 
