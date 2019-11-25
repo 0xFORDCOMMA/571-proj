@@ -123,7 +123,8 @@ class moveDrone:
         self.status_publisher = rospy.Publisher("/status",String,queue_size = 10)
         self.free = String(data = "next")
         self.rate = rospy.Rate(30)
-        with open('reef.json', 'r') as f:
+        self.root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+        with open(root_path + 'reef.json', 'r') as f:
             self.grid = json.load(f)
         self.vehicle, self.home = init_drone(self.grid)
         print("Ready!")
@@ -169,7 +170,7 @@ class moveDrone:
                                 'east':  {'TurnCW': 'south','TurnCCW': 'north'},
                                 'west':  {'TurnCW': 'north','TurnCCW': 'south'}}
             new_loc = (x, y, res_orientations[self.loc[2]][action])
-            print "Taking action %s to go from %s to %s\n" % (action, current_loc, new_loc)
+            print "Taking action %s to go from %s to %s\n" % (action, self.loc, new_loc)
             self.loc = new_loc
             wp = get_location_offset_meters(self.home, *get_offsets(self.grid, x, y))
             Command(0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, 1, 90, 0, 1 if action == "TurnCW" else -1, 1, wp.lat, wp.lon, wp.alt)
