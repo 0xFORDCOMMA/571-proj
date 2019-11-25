@@ -1,78 +1,92 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+__copyright__ = "Copyright 2019, AAIR Lab, ASU"
+__authors__ = ["Naman Shah", "Abhyudaya Srinet"]
+__credits__ = ["Siddharth Srivastava"]
+__license__ = "MIT"
+__version__ = "1.0"
+__maintainers__ = ["Pulkit Verma", "Abhyudaya Srinet"]
+__contact__ = "aair.lab@asu.edu"
+__docformat__ = 'reStructuredText'
+
 import heapq
-import environment_api as api 
+from problem import * 
 import rospy
 from std_msgs.msg import String
 import numpy as np
 import random
 
-class RandomWalker:
+class RandomWalk:
 
     def __init__(self):
-        self.current_state = api.get_current_state()
-        print "Current State:"
-        print self.current_state
-        self.action_list = api.get_all_actions()
-        self.random_walk()
+        self.helper = Helper()
+        rospy.init_node("random_walk")
+        self.publisher = rospy.Publisher("/actions", String, queue_size = 10)
+        self.subscriber = rospy.Subscriber("/status", String, self.callback)
+        self.init_state = self.helper.get_initial_state()
+        self.current_state = self.init_state
+        self.last_action = None
+        self.visited_list = set()
+        rospy.Rate(1).sleep()
+        print "Running"
+        self.next_action()
+        rospy.spin()
+
+# temp = helper.get_successor(cur_node[2][1])
+#                 visited.append(cur_node[2][1])
+#                 for key, values in temp.items():
+#                     cost = 0
+#                     state_temp=[]
+#                     list_1 = []
+#                     temp = []
+#                     cost = values[1] + cur_node[0]
+#                     state_temp=cur_node[3]+[values[0]]
+#                     list_1.extend(cur_node[2][0])
+#                     list_1.extend(key.split())
+#                     temp.append(list_1)
+#                     temp.append(values[0])
+#                     heapq.heappush(q3, (cost, entry_count, temp,state_temp))
+
+
 
     def random_walk(self):
-
-        print("Robot can perform following actions: {}".format(self.action_list))
+        '''
+        Randomly choses an action to perform among possible actions
+        '''
         while True:
+            possible_next_states = self.helper.get_successor(self.current_state)
+            idx = random.randint(0, len(possible_next_states.items()) - 1)
+            action, state_cost = possible_next_states.items()[idx]
+            next_state, cost = state_cost
+            if next_state.x == -1 and next_state.y == -1:
+                continue
+            self.visited_list.add((next_state.x,next_state.y))
+            return next_state, action       
 
-            if api.is_terminal_state(self.current_state):
-                print "Goal Reached"
-                break
+    def next_action(self):
+        '''
+        Updates current state from chosen action and publishes the action to the /actions topic
+        '''
+        if self.helper.is_goal_state(self.visited_list):
+            print "Goal Reached"
+            self.publisher.publish(String(data = 'land'))
 
-            possible_actions = api.get_possible_actions(self.current_state)
-            print("Possible actions in current state: {}".format(possible_actions))
-            
-            for action in possible_actions:
-                print "Action {}".format(action)
-                if action == "pick": # try to pick book 1
-                    action_params = {"book_name":"book_1"}
-                elif action == "place":
-                    action_params = {"book_name":"book_1", "bin_name":"trolly_2"}
-                else:
-                    action_params = {}
-
-                states = api.get_possible_states(self.current_state, action, action_params)
-                print "Possible states are:"
-                for state in states:
-                    next_state = states[state][0]
-                    probability = states[state][1]
-                    print state
-                    print "State: ", next_state
-                    print "Probability: ", probability
-                    print "Reward: ", api.get_reward(self.current_state, action, next_state)
-                    print ""
-
-
-            idx = random.randint(0, len(possible_actions) - 1)
-            chosen_action = possible_actions[idx]
-            if chosen_action == "pick": # try to pick book 1
-                action_params = {"book_name":"book_1"}
-            elif chosen_action == "place":
-                action_params = {"book_name":"book_1", "bin_name":"trolly_2"}
-            else:
-                action_params = {}
-
-            print "Executing action: {} with params: {}".format(chosen_action, action_params)
-
-            success, next_state = api.execute_action(chosen_action, action_params)
-            if success == 1:
-                print "Successfully executed"
-            else:
-                print "Action failed"
-            
+        else:
+            next_state, action = self.random_walk()
+            print "Executing ", action
             self.current_state = next_state
-            print "updated current state:"
-            print self.current_state
+            action_str = String(data = action)
+            self.publisher.publish(action_str)
 
-            raw_input("\nPress Enter to continue execution...")
+    def callback(self,data):
+        '''
+        callback for handling status messages of turtlebot
+        executes the next action when the turtlebot is ready
+        '''
+        if data.data == "next":
+            self.next_action()
 
 
 if __name__ == "__main__":
-    random_walker = RandomWalker()
+    random_walker = RandomWalk()
