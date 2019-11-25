@@ -37,7 +37,7 @@ def get_location_offset_meters(original_location, dNorth, dEast, alt):
     newlon = original_location.lon + (dLon * 180/math.pi)
     return LocationGlobal(newlat, newlon,original_location.alt+alt)
 
-def init_drone():
+def init_drone(grid):
     connection_string = '127.0.0.1:14540'
     MAV_MODE_AUTO = 4
 
@@ -79,8 +79,6 @@ def init_drone():
     cmds = vehicle.commands
     cmds.clear()
 
-    start = copy.copy(vehicle.location.global_frame)
-    print "start location %s" % start
 
     home = vehicle.location.global_relative_frame
 
@@ -88,10 +86,9 @@ def init_drone():
     wp = get_location_offset_meters(home, 0, 0, 10);
     cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
     cmds.add(cmd)
-    print "current location %s" % vehicle.location.global_relative_frame
 
     # TODO: Move to actual starting position
-    wp = get_location_offset_meters(start, -1.5, -3, 1.25);
+    wp = get_location_offset_meters(home, float(grid[0][0]['x'])+6, float(grid[0][0]['y'])+10, float(grid[0][0]['z'])+5.5)
     cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
     cmds.add(cmd)
 
@@ -118,14 +115,14 @@ class moveDrone:
     def __init__(self):
         rospy.init_node('move_drone',anonymous = True)
         self.actions = String()
-        self.loc = None
+        self.loc = (0,0,"north")
         self.action_subscriber = rospy.Subscriber('/actions',String,self.callback_actions)
         self.status_publisher = rospy.Publisher("/status",String,queue_size = 10)
         self.free = String(data = "next")
         self.rate = rospy.Rate(30)
         with open('reef.json', 'r') as f:
             self.grid = json.load(f)
-        self.vehicle, self.home = init_drone()
+        self.vehicle, self.home = init_drone(self.grid)
         print("Ready!")
         rospy.spin()
 
@@ -149,7 +146,7 @@ class moveDrone:
             cmds = self.vehicle.commands
             #cmds.clear()
 
-            wp = get_location_offset_meters(start, self.grid[x][y]['x'], self.grid[x][y]['y'], self.grid[x][y]['z']);
+            wp = get_location_offset_meters(self.home, float(self.grid[x][y]['x'])+6, float(self.grid[x][y]['y'])+10, float(self.grid[x][y]['z'])+5.5)
             cmd = Command(0,0,0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, wp.lat, wp.lon, wp.alt)
             cmds.add(cmd)
 
@@ -158,7 +155,7 @@ class moveDrone:
 
         elif action == "TurnCW" or action == "TurnCCW":
             x, y = self.loc[0], self.loc[1]
-            wp = get_location_offset_meters(start, self.grid[x][y]['x'], self.grid[x][y]['y'], self.grid[x][y]['z']);
+            wp = get_location_offset_meters(self.home, float(self.grid[x][y]['x'])+6, float(self.grid[x][y]['y'])+10, float(self.grid[x][y]['z'])+5.5)
             Command(0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, 1, 90, 0, 1 if action == "TurnCW" else -1, 1, wp.lat, wp.lon, wp.alt)
 
         else:
