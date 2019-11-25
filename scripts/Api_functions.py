@@ -3,6 +3,7 @@
 
 import sys
 import rospy
+
 from group_13.srv import *
 import collections
 from geometry_msgs.msg import Twist
@@ -21,11 +22,11 @@ import json
 class State:
     
     
-	def __init__(self,x,y,orientation):
+	def __init__(self,x,y,direction):
         
 		self.x  = x
 		self.y = y
-		self.direction = orientation
+		self.direction = direction
 
 	def __eq__(self, other):
 		if self.x == other.x and self.y == other.y :
@@ -33,24 +34,24 @@ class State:
 		else:
 		    return False
 	def __repr__(self):
-        	return "({}, {}, {})".format(str(self.x), str(self.y), str(self.orientation))
+        	return "({}, {}, {})".format(str(self.x), str(self.y), str(self.direction))
 
 class Helper:
 
-	def get_cost(self,curr_state,succ_state):
+	def get_cost(self,curr_state,v1,v2):
 		root_path=os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 		with open(root_path + "/reef.json") as reef_file:
 			try:
 				reef_obj=json.load(reef_file)
 			except (ValueError, KeyError, TypeError):
                			print "JSON error"
-		x1=float(reef_obj[curr_state.x][curr_state.y]["x"])
-		y1=float(reef_obj[curr_state.x][curr_state.y]["y"])
-		z1=float(reef_obj[curr_state.x][curr_state.y]["z"])
+		x1=float(reef_obj[curr_state[0]][curr_state[1]]["x"])
+		y1=float(reef_obj[curr_state[0]][curr_state[1]]["y"])
+		z1=float(reef_obj[curr_state[0]][curr_state[1]]["z"])
 
-		x2=float(reef_obj[succ_state.x][succ_state.y]["x"])
-		y2=float(reef_obj[succ_state.x][succ_state.y]["y"])
-		z2=float(reef_obj[succ_state.x][succ_state.y]["z"])
+		x2=float(reef_obj[v1][v2]["x"])
+		y2=float(reef_obj[v1][v2]["y"])
+		z2=float(reef_obj[v1][v2]["z"])
 		
 					
 
@@ -76,11 +77,14 @@ class Helper:
 
 		try:
 			get_successor = rospy.ServiceProxy('get_successor', GetSuccessor)
-		    	response = get_successor(curr_state.x, curr_state.y, curr_state.orientation)
+		    	response = get_successor(curr_state.x,curr_state.y,curr_state.direction)
+			print response
 		    	states = collections.OrderedDict()
+			d={}
 
-			for i in range(len(response)):
-		        	states[response.action[i]] = (State(response.x[i], response.y[i], response.direction[i]))
+			for i in range(4):
+				d={response.action[i] : State(response.x[i], response.y[i], response.direction[i])}
+		        	states.update(d)
 			return states
 		
 		except rospy.ServiceException, e:

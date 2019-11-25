@@ -22,6 +22,8 @@ def check_is_edge(edge, valueFlag):
 	elif valueFlag == "changedValuesBefore":
 		if edge[0] < 0 or edge[0] >6 or edge[1] < 0 or edge[1] > 4:
 			return False
+	else:
+		True
 
 
 def handle_get_initial_state(req):
@@ -29,21 +31,23 @@ def handle_get_initial_state(req):
 	global init_state
 
 	initial_state = init_state
-	return GetInitialStateResponse(initial_state.x,initial_state.y,initial_state.direction)
+	return GetInitialStateResponse(initial_state[0],initial_state[1],initial_state[2])
 	
 def handle_get_successor(req):
 	
-	
+	print "hello"
 	action_list = ["TurnCW", "TurnCCW", "MoveB", "MoveF"]
 	direction_list = ["NORTH", "EAST", "SOUTH", "WEST"]
 	state_x = []
 	state_y = []
 	state_direction = []
 	
-	
+	print "hello"
 	for action in action_list:
 		#Checking requested action and making changes in states
 		x_cord, y_cord, direction = req.x, req.y, req.direction
+		print x_cord
+		print y_cord
 		if action == 'TurnCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index+1)%4]
@@ -74,32 +78,39 @@ def handle_get_successor(req):
 			elif direction == "WEST":
 				x_cord += 1
 			
-		
+		print x_cord
+		print y_cord
 		if req.x <= x_cord and req.y <= y_cord:
 			isValidEdge = check_is_edge((req.x, req.y, x_cord, y_cord), "changedValuesLater")
 		else:
 			isValidEdge = check_is_edge((x_cord, y_cord, req.x, req.y), "changedValuesBefore")
 
-		if isValidEdge:
+		if not isValidEdge:
+			state_x.append(-1)
+			state_y.append(-1)
+			state_direction.append(direction)
+			
+		else:
 			state_x.append(x_cord)
 			state_y.append(y_cord)
 			state_direction.append(direction)
-		else:
-			action_list.remove(action)
 			
 
 	return GetSuccessorResponse(state_x, state_y, state_direction, action_list)
-  
 
 def project_server():
     
     rospy.init_node('get_successor_server')
-    rospy.Service('get_successor', GetSuccessor, handle_get_successor)
+ 
     rospy.Service('get_initial_state', GetInitialState, handle_get_initial_state)
+    rospy.Service('get_successor', GetSuccessor, handle_get_successor)
+      
+
     print "Ready!"
     rospy.spin()
 
 if __name__ == "__main__":
     
-    init_state=get_rand_initial_state()
+    
+    init_state=gen_init_state.get_rand_initial_state()
     project_server()
