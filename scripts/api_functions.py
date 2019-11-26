@@ -77,7 +77,7 @@ class Helper:
 		return g_cost
 
 	def get_heuristic(self,node_set,v1):
-		count=len(set(node_set))
+		count=len(set([tuple(l) for l in node_set]))
 		if v1 not in node_set:
 			count+=1
 		return 2*(24-count)

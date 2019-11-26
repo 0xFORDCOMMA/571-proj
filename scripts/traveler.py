@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+#Based on CSE 571 HW 1 - Search
 __copyright__ = "Copyright 2019, AAIR Lab, ASU"
 __authors__ = ["Naman Shah"]
 __credits__ = ["Siddharth Srivastava"]
@@ -20,18 +21,19 @@ import time
 rospy.init_node("search_algorithms")
 publisher = rospy.Publisher("/actions", String, queue_size=10)
 parser = argparse.ArgumentParser()
-parser.add_argument('-a', help="Please mention algorithm to use. Possible arguments = {ucs, astar}. Default value is ucs.", metavar='ucs', action='store', dest='algorithm', default="algorithm", type=str)
-parser.add_argument('-c', help="Use custom heuristic function. No value needed.", action='store_true', dest='custom_heuristic')
+parser.add_argument('-a', help="Please mention algorithm to use. Possible arguments = {ucs, astar}. Default value is ucs.", metavar='ucs', action='store', dest='algorithm', default="ucs", type=str)
+parser.add_argument('-l', help="Length of tour. Possible arguments 1 to 24, inclusive. Defalut is 24", metavar="n", action='store', dest='tour_length', default=24, type=int)
 
 
-def ucs(use_custom_heuristic):
+def ucs(tour_length = 24):
+    print "Running UCS"
     helper = api_functions.Helper()
     init_state = helper.get_initial_state()
     print(init_state)
     #goal_state = helper.get_goal_state()
     possible_actions = helper.get_actions() 
     action_list = []
-
+    max_state = 0
     # to get the possible action->(state,cost) mapping from current state
     state_dictionary = helper.get_successor(init_state)
     state_repr=[]
@@ -52,17 +54,19 @@ def ucs(use_custom_heuristic):
         temp.append(list_1)
         temp.append(values)
         local_visited.append(init_state)
-        heapq.heappush(q3, (helper.get_cost(init_state,values.x,values.y,key), entry_count, temp,state_repr,local_visited))
+        cost=helper.get_cost(init_state,values.x,values.y,key)
+        heapq.heappush(q3, (cost, entry_count, temp,state_repr,local_visited ))
         entry_count=entry_count+1
     while q3:
         cur_node = heapq.heappop(q3)
-        print "cur_list" + str(cur_node[3])
-        for x in q3:
-            print "q3 right now" + str(x)
+        # print "cur_list" + str(cur_node[3])
+        #for x in q3:
+            #print "q3 right now" + str(x)
         if cur_node[2][1].x < 0 or cur_node[2][1].y < 0:
-            print "reject: " + str(cur_node)
+            #print "reject: " + str(cur_node)
             continue
-        elif len(all_states.difference(set([tuple(v) for v in cur_node[3]]))) == 0:
+        elif len(set([tuple(l) for l in cur_node[3]])) >= tour_length:
+        #elif len(all_states.difference(set([tuple(v) for v in cur_node[3]]))) < 14:
             print("goal_reached")
             print init_state
             print cur_node[0]
@@ -82,23 +86,27 @@ def ucs(use_custom_heuristic):
                 local_visited=[]
                 list_1 = []
                 temp = []
-                cost = helper.get_cost(cur_node[2][1],values.x,values.y,key)+ cur_node[0]
                 
                 state_temp=cur_node[3]+[[values.x,values.y]]
                 local_visited=cur_node[4]+[cur_node[2][1]]
                 list_1.extend(cur_node[2][0])
                 list_1.extend(key.split())
+                cost=helper.get_cost(init_state,values.x,values.y,key) + cur_node[0]
                 temp.append(list_1)
                 temp.append(values)
                 next = (cost, entry_count, temp,state_temp,local_visited)
-                print next
+                if len(set([tuple(l) for l in state_temp])) > max_state:
+                    max_state = len(set([tuple(l) for l in state_temp]))
+                    print "Max Node" + str(max_state)
+                #print next
                 heapq.heappush(q3, next)
                 entry_count += 1
-        print "q3 size:" + str(len(q3))
+        #print "q3 size:" + str(len(q3))
     return action_list
 
 
-def astar(use_custom_heuristic):
+def astar(tour_length):
+    print "Running A*"
     helper = api_functions.Helper()
     init_state = helper.get_initial_state()
     print(init_state)
@@ -129,7 +137,7 @@ def astar(use_custom_heuristic):
         heuristic_cost=helper.get_heuristic(state_repr,[values.x,values.y])
         final_cost=heuristic_cost+helper.get_cost(init_state,values.x,values.y,key)
         cost=helper.get_cost(init_state,values.x,values.y,key)
-        heapq.heappush(q3, (final_cost, values.x,values.y,key), entry_count, temp,state_repr,local_visited, cost))
+        heapq.heappush(q3, (final_cost , entry_count, temp,state_repr,local_visited, cost))
         entry_count=entry_count+1
     while q3:
         cur_node = heapq.heappop(q3)
@@ -139,7 +147,7 @@ def astar(use_custom_heuristic):
         if cur_node[2][1].x < 0 or cur_node[2][1].y < 0:
             #print "reject: " + str(cur_node)
             continue
-        elif len(set([tuple(l) for l in cur_node[3]])) >= 7:
+        elif len(set([tuple(l) for l in cur_node[3]])) >= tour_length:
         #elif len(all_states.difference(set([tuple(v) for v in cur_node[3]]))) < 14:
             print("goal_reached")
             print init_state
@@ -165,7 +173,7 @@ def astar(use_custom_heuristic):
                 local_visited=cur_node[4]+[cur_node[2][1]]
                 list_1.extend(cur_node[2][0])
                 list_1.extend(key.split())
-                heuristic_cost = helper.get_heuristic(cur_node[2][1], [values.x, values.y])
+                heuristic_cost = helper.get_heuristic(state_temp, [values.x, values.y])
                 cost=helper.get_cost(init_state,values.x,values.y,key) + cur_node[5]
                 final_cost = heuristic_cost + cost
                 temp.append(list_1)
@@ -195,12 +203,9 @@ if __name__ == "__main__":
     if algorithm is None:
         print("Incorrect Algorithm name.")
         exit(1)
-    if args.algorithm in ["bfs", "ucs"] and args.custom_heuristic == True:
-        print ("Error: "+args.algorithm+" called with heuristic")
-        exit(1)
 
     start_time = time.time()
-    actions = algorithm(args.custom_heuristic)
+    actions = algorithm(args.tour_length)
     time_taken = time.time() - start_time
     print("Time Taken = " + str(time_taken))
     print("Plan = " + str(actions))

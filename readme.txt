@@ -16,7 +16,7 @@
 4. `rqt --perspective-file /home/ubuntu/catkin_ws/src/group_13/iris.perspective`
 5. `rosrun group_13 project_server.py`
 7. `rosrun group_13 move_drone.py`
-6. `rosrun group_13 traveler.py -c astar`
+6. `rosrun group_13 traveler.py -a astar`
 
 
 # Dependencies
@@ -52,7 +52,10 @@ Underwater vehicle built by Axel Hackbarth, Edwin Kreuzer and Eugen Solowjow at 
 
 ### traveler.py
 Code to run UCS and A* search to solve a traveling salesman problem
-Args: `-c {ucs, astar}` to choose algorithm. Default is A*
+Args: `-a {ucs, astar}` to choose algorithm. Default is `usc`
+Args: `-l <tour length>` to indicate number of explred nodes for goal state of algorithm.
+    Default is 24 (full exploration). Number must be between 1 & 24, inclusive. 
+    A number less than 24 is used to test the action list and drone movement without requiring full traveling salesman search
 
 ### project_server.py
 Initializes environment and environment update
