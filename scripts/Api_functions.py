@@ -14,7 +14,6 @@ from geometry_msgs.msg import Pose
 import tf
 from gazebo_msgs.msg import ModelState
 from geometry_msgs.msg import Quaternion
-from pid import PID
 import copy
 import os
 import json
@@ -77,6 +76,12 @@ class Helper:
 		#print g_cost
 		return g_cost
 	
+    def get_heuristic(self,node_set,v1):
+            count=len(set(node_set))
+            if v1 not in node_set:
+                    count+=1
+            return 2*(24-count)
+
 
 	def get_initial_state(self):
 		
@@ -114,6 +119,18 @@ class Helper:
 	def get_actions(self):
         
         	return ["TurnCW", "TurnCCW", "MoveF", "MoveB"]
+
+    def execute_action(self):
+		
+		#return State(0,0,'East')
+		rospy.wait_for_service('get_initial_state')
+		try:
+		    get_initial_state = rospy.ServiceProxy('get_initial_state', GetInitialState)
+		    response = get_initial_state()
+		    return State(response.x, response.y, response.direction)
+
+		except rospy.ServiceException, e:
+		     print "Service call failed: %s" % e
 	
 	def get_all_states(self):
 		
