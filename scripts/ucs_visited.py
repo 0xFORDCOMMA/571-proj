@@ -40,6 +40,7 @@ def algorithm(use_custom_heuristic):
     state_repr=[]
     q3 = []
     entry_count = 0
+    local_visited=[]
     if True:
        	#visited.append(init_state)
         state_repr.append([init_state.x,init_state.y])
@@ -48,48 +49,68 @@ def algorithm(use_custom_heuristic):
 	    #print(type(values))
 	    if values.x<0 or values.y<0:
 		continue
-	    cost=0
+	    local_visited=[]
             list_1 = []
             temp = []
             list_1.extend(key.split())
             temp.append(list_1)
-	    cost = helper.get_cost(cur_node[2][1],values[0].x,values[0].y)	
             temp.append(values)
-            heapq.heappush(q3, (cost, entry_count, temp,state_repr))
+	    local_visited.append(init_state)
+            heapq.heappush(q3, (helper.get_cost(init_state,values.x,values.y,key), entry_count, temp,state_repr,local_visited))
             entry_count=entry_count+1
-	print "12"
+	#print "12"
         while q3:
             cur_node = heapq.heappop(q3)
+            #print "cur_list" + str(cur_node[3])
+            
+	    #print cur_node[2][1]
             if cur_node[2][1].x < 0 or cur_node[2][1].y < 0:
-                continue
+		
+		continue
             elif helper.is_goal_state(cur_node[3]):
-                print(cur_node[3])
+		print("goal_reached")
+		print init_state
+		print cur_node[0]
+                #print(cur_node[3])
+
                 action_list = cur_node[2][0]
-                print(q3)
+                #for x in q3:
+		#	print(x)
+                print "cur node" + str(cur_node)
                 break
-            #elif cur_node[2][1] in visited:
-                #continue
             else:
+                for visited in cur_node[4]:
+                    if cur_node[2][1] == visited:
+                        continue
                 temp = helper.get_successor(cur_node[2][1])
-		print "22"
+		#print "22"
 		
                 #visited.append(cur_node[2][1])
                 for key, values in temp.items():
-		    if values[0].x<0 or values[0].y<0:
+		    if values.x<0 or values.y<0:
 			continue
                     cost = 0
                     state_temp=[]
+		    local_visited=[]
                     list_1 = []
                     temp = []
-		    print cur_node[2][1]
-                    cost = helper.get_cost(cur_node[2][1],values[0].x,values[0].y)+ cur_node[0]
-                    state_temp=cur_node[3]+[[values[0].x,values[0].y]]
+		    #print cur_node[2][1]
+                    cost = helper.get_cost(cur_node[2][1],values.x,values.y,key)+ cur_node[0]
+		    
+                    state_temp=cur_node[3]+[[values.x,values.y]]
+		    local_visited=cur_node[4]+[cur_node[2][1]]
+		    print "cur solution len: " + str(len(cur_node[3]))
+		    #print values
+		    #print("######")	
                     list_1.extend(cur_node[2][0])
                     list_1.extend(key.split())
                     temp.append(list_1)
                     temp.append(values)
-                    heapq.heappush(q3, (cost, entry_count, temp,state_temp))
+                    next = (cost, entry_count, temp,state_temp,local_visited)
+                    #print next
+                    heapq.heappush(q3, next)
                     entry_count += 1
+            #print "q3 size:" + str(len(q3))
     return action_list
 
 

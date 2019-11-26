@@ -37,27 +37,50 @@ class State:
         	return "({}, {}, {})".format(str(self.x), str(self.y), str(self.direction))
 
 class Helper:
-
-	def get_cost(self,curr_state,v1,v2):
+	
+	def get_cost(self,curr_state,v1,v2,key):
 		root_path=os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 		with open(root_path + "/reef.json") as reef_file:
 			try:
 				reef_obj=json.load(reef_file)
 			except (ValueError, KeyError, TypeError):
                			print "JSON error"
-		x1=float(reef_obj[curr_state[0]][curr_state[1]]["x"])
-		y1=float(reef_obj[curr_state[0]][curr_state[1]]["y"])
-		z1=float(reef_obj[curr_state[0]][curr_state[1]]["z"])
+		#print "key: " + str(key)
+		
+		if key=="TurnCW" or key=="TurnCCW":
+			g_cost=6
+			
+		elif key=="MoveB":
+			x1=float(reef_obj[int(curr_state.x)][int(curr_state.y)]['x'])
+			y1=float(reef_obj[int(curr_state.x)][int(curr_state.y)]['y'])
+			z1=float(reef_obj[int(curr_state.x)][int(curr_state.y)]['z'])
 
-		x2=float(reef_obj[v1][v2]["x"])
-		y2=float(reef_obj[v1][v2]["y"])
-		z2=float(reef_obj[v1][v2]["z"])
+			x2=float(reef_obj[int(v1)][int(v2)]['x'])
+			y2=float(reef_obj[int(v1)][int(v2)]['y'])
+			z2=float(reef_obj[int(v1)][int(v2)]['z'])
 		
 					
 
-		g_cost=math.sqrt(pow((x1-x2),2)+pow((y1-y2),2)+pow((z1-z2),2))
+			g_cost=2*(math.sqrt(pow((x1-x2),2)+pow((y1-y2),2)+pow((z1-z2),2)))
+		elif key=="MoveF":
 		
+			x1=float(reef_obj[int(curr_state.x)][int(curr_state.y)]['x'])
+			y1=float(reef_obj[int(curr_state.x)][int(curr_state.y)]['y'])
+			z1=float(reef_obj[int(curr_state.x)][int(curr_state.y)]['z'])
+
+			x2=float(reef_obj[int(v1)][int(v2)]['x'])
+			y2=float(reef_obj[int(v1)][int(v2)]['y'])
+			z2=float(reef_obj[int(v1)][int(v2)]['z'])
+		
+					
+
+			g_cost=math.sqrt(pow((x1-x2),2)+pow((y1-y2),2)+pow((z1-z2),2))
+
+		
+		#print key
+		#print g_cost
 		return g_cost
+	
 
 	def get_initial_state(self):
 		
@@ -78,13 +101,15 @@ class Helper:
 		try:
 			get_successor = rospy.ServiceProxy('get_successor', GetSuccessor)
 		    	response = get_successor(curr_state.x,curr_state.y,curr_state.direction)
-			print response
+			#print response
 		    	states = collections.OrderedDict()
 			d={}
-
+		
 			for i in range(4):
 				d={response.action[i] : State(response.x[i], response.y[i], response.direction[i])}
 		        	states.update(d)
+		
+
 			return states
 		
 		except rospy.ServiceException, e:
@@ -97,24 +122,27 @@ class Helper:
 	def get_all_states(self):
 		
 		all_states=[]
-		for i in range(0,7):
-			for j in range(0,5):
+		for i in range(0,6):
+			for j in range(0,4):
 				all_states.append((i,j))
 		return all_states
 
 	def is_goal_state(self,visited):
-		
-		all_state=self.get_all_states()
-		dup=all_state
-		for st in visited:
-			if(st in dup):
-				dup.remove(st)
-		if not dup:
-			return True
-		else:
-			return False
-								
+		Total_state=set([tuple(l) for l in self.get_all_states()])
+		#dup=Total_state
+		visited_set = set([tuple(v) for v in visited])
 
+		return len(Total_state.difference(visited_set)) == 0
+
+		#dup=Total_state
+		#for st in visited:
+	#		if st in dup:
+	#			dup.remove(st)
+	#	if not dup:
+	#		return True
+	#	else:
+	#		return False
+		
 	def usage(self):
         	return "%s [x y]" % sys.argv[0]
 
