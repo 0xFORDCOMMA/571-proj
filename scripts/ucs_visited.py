@@ -40,7 +40,8 @@ def algorithm(use_custom_heuristic):
     state_repr=[]
     q3 = []
     entry_count = 0
-    if not helper.is_goal_state(init_state):
+    local_visited=[]
+    if True:
        	#visited.append(init_state)
         state_repr.append([init_state.x,init_state.y])
 	#print(type(init_state))
@@ -60,14 +61,14 @@ def algorithm(use_custom_heuristic):
 	#print "12"
         while q3:
             cur_node = heapq.heappop(q3)
-            print "cur_node" + str(cur_node)
+            print "cur_list" + str(cur_node[3])
             for x in q3:
 		print "q3 right now" + str(x)
 	    #print cur_node[2][1]
             if cur_node[2][1].x < 0 or cur_node[2][1].y < 0:
 		print "reject: " + str(cur_node)
 		continue
-            elif helper.is_goal_state(cur_node[2][1]):
+            elif helper.is_goal_state(cur_node[3]):
 		print("goal_reached")
 		print init_state
 		print cur_node[0]
