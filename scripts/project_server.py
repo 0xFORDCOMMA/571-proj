@@ -52,8 +52,8 @@ def handle_get_successor(req):
 	for action in action_list:
 		#Checking requested action and making changes in states
 		x_cord, y_cord, direction = req.x, req.y, req.direction
-		print x_cord
-		print y_cord
+		#print x_cord
+		#print y_cord
 		if action == 'TurnCW':
 			index = direction_list.index(req.direction)
 			direction = direction_list[(index+1)%4]
@@ -88,27 +88,27 @@ def handle_get_successor(req):
 
 		if req.x <= x_cord and req.y <= y_cord:
 			isValidEdge = check_is_edge((req.x, req.y, x_cord, y_cord), "changedValuesLater")
-			print isValidEdge
-			print "valid later"
+			#print isValidEdge
+			#print "valid later"
 		else:
 			isValidEdge = check_is_edge((x_cord, y_cord, req.x, req.y), "changedValuesBefore")
-			print isValidEdge
-			print "valid before"
+			#print isValidEdge
+			#print "valid before"
 
 		if not isValidEdge:
 			state_x.append(-1)
 			state_y.append(-1)
 			
 			state_direction.append(direction)
-			print "hello"
+			#print "hello"
 			
 		else:
 			state_x.append(x_cord)
 			state_y.append(y_cord)
 			state_direction.append(direction)
 			
-		print x_cord
-		print y_cord
+		#print x_cord
+		#print y_cord
 	return GetSuccessorResponse(state_x, state_y, state_direction,action_list)
 
 def project_server():

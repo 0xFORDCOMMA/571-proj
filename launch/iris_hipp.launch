@@ -12,7 +12,7 @@
     <arg name="world" default="$(find group_13)/worlds/iris_reef.world"/>
     <arg name="sdf" default="$(find mavlink_sitl_gazebo)/models/$(arg vehicle)/$(arg vehicle).sdf"/>
  
-    <include file="$(find group_13)/launch/2hipp.launch">
+    <include file="$(find group_13)/launch/hipp.launch">
         <arg name="vehicle" value="$(arg vehicle)"/>
         <arg name="x" value="$(arg x)"/>
         <arg name="y" value="$(arg y)"/>

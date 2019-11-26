@@ -40,7 +40,7 @@ def get_location_offset_meters(original_location, dNorth, dEast, alt):
 
 
 def get_offsets(grid, x, y):
-    return float(grid[x][y]['x'])+6, float(grid[x][y]['y'])+10, float(grid[x][y]['z'])+5.5
+    return float(grid[int(x)][int(y)]['x'])+6, float(grid[int(x)][int(y)]['y'])+10, float(grid[int(x)][int(y)]['z'])+5.5
 
 
 class moveDrone:
@@ -56,14 +56,14 @@ class moveDrone:
 
         #Create a message listener for self.home position fix
         @self.vehicle.on_message('HOME_POSITION')
-        def listener(self, name, self.home_position):
-            global self.home_position_set
+        def listener(self, name, home_position):
+            global home_position_set
             self.home_position_set = True
 
         print "Home Location Set %s" % self.vehicle.home_location
 
         # Display basic self.vehicle state
-        print " Type: %s" % self.vehicle._self.vehicle_type
+        #print " Type: %s" % self.vehicle.vehicle_type
         print " Armed: %s" % self.vehicle.armed
         print " System status: %s" % self.vehicle.system_status.state
         print " GPS: %s" % self.vehicle.gps_0
@@ -124,16 +124,18 @@ class moveDrone:
     def callback_actions(self,data):
         self.actions = data.data.split("_")
         self.rate.sleep()
-        self.execute_next()
+        for i in range(len(self.actions)):
+            self.execute_next()
+            time.sleep(5)
 
     def execute_next(self):
         action = self.actions.pop(0)
         if action == "MoveF" or action == "MoveB":
             current_loc = self.loc
 
-            deltas = {'MoveF': {'north': (0,1),  'south': (0,-1), 'east': (1,0),  'west': (-1,0)},
-                      'MoveB': {'north': (0,-1), 'south': (0,1),  'east': (-1,0), 'west': (1,0)}  }
-            new_loc = api.State(*([sum(dim) for dim in zip(current_loc[:2], deltas[action][self.loc.orientation])] + [self.loc.orientation]))
+            deltas = {'MoveF': {'NORTH': (0,1),  'SOUTH': (0,-1), 'EAST': (1,0),  'WEST': (-1,0)},
+                      'MoveB': {'NORTH': (0,-1), 'SOUTH': (0,1),  'EAST': (-1,0), 'WEST': (1,0)}  }
+            new_loc = api.State(*([sum(dim) for dim in zip((self.loc.x, self.loc.y), deltas[action][self.loc.direction])] + [self.loc.direction]))
 
             # Load commands
             cmds = self.vehicle.commands
@@ -152,11 +154,11 @@ class moveDrone:
                 print "Attempted to move out of grid.\n"
 
         elif action == "TurnCW" or action == "TurnCCW":
-            res_orientations = {'north': {'TurnCW': 'east', 'TurnCCW': 'west'},
-                                'south': {'TurnCW': 'west', 'TurnCCW': 'east'},
-                                'east':  {'TurnCW': 'south','TurnCCW': 'north'},
-                                'west':  {'TurnCW': 'north','TurnCCW': 'south'}}
-            new_loc = api.State(self.loc.x, self.loc.y, res_orientations[self.loc.orientation][action])
+            res_orientations = {'NORTH': {'TurnCW': 'EAST', 'TurnCCW': 'WEST'},
+                                'SOUTH': {'TurnCW': 'WEST', 'TurnCCW': 'EAST'},
+                                'EAST':  {'TurnCW': 'SOUTH','TurnCCW': 'NORTH'},
+                                'WEST':  {'TurnCW': 'NORTH','TurnCCW': 'SOUTH'}}
+            new_loc = api.State(self.loc.x, self.loc.y, res_orientations[self.loc.direction][action])
             print "Taking action %s to go from %s to %s" % (action, self.loc, new_loc)
             self.loc = new_loc
             wp = get_location_offset_meters(self.home, *get_offsets(self.grid, self.loc.x, self.loc.y))

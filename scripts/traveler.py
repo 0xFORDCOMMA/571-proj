@@ -105,7 +105,7 @@ def astar(use_custom_heuristic):
     #goal_state = helper.get_goal_state()
     possible_actions = helper.get_actions() 
     action_list = []
-
+    max_state = 0
     # to get the possible action->(state,cost) mapping from current state
     state_dictionary = helper.get_successor(init_state)
     state_repr=[]
@@ -130,13 +130,14 @@ def astar(use_custom_heuristic):
         entry_count=entry_count+1
     while q3:
         cur_node = heapq.heappop(q3)
-        print "cur_list" + str(cur_node[3])
-        for x in q3:
-            print "q3 right now" + str(x)
+        # print "cur_list" + str(cur_node[3])
+        #for x in q3:
+            #print "q3 right now" + str(x)
         if cur_node[2][1].x < 0 or cur_node[2][1].y < 0:
-            print "reject: " + str(cur_node)
+            #print "reject: " + str(cur_node)
             continue
-        elif len(all_states.difference(set([tuple(v) for v in cur_node[3]]))) == 0:
+        elif len(set([tuple(l) for l in cur_node[3]])) >= 7:
+        #elif len(all_states.difference(set([tuple(v) for v in cur_node[3]]))) < 14:
             print("goal_reached")
             print init_state
             print cur_node[0]
@@ -165,10 +166,13 @@ def astar(use_custom_heuristic):
                 temp.append(list_1)
                 temp.append(values)
                 next = (cost, entry_count, temp,state_temp,local_visited)
-                print next
+                if len(set([tuple(l) for l in state_temp])) > max_state:
+                    max_state = len(set([tuple(l) for l in state_temp]))
+                    print "Max Node" + str(max_state)
+                #print next
                 heapq.heappush(q3, next)
                 entry_count += 1
-        print "q3 size:" + str(len(q3))
+        #print "q3 size:" + str(len(q3))
     return action_list
 
 

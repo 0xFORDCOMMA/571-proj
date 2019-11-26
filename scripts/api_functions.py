@@ -44,7 +44,7 @@ class Helper:
 				reef_obj=json.load(reef_file)
 			except (ValueError, KeyError, TypeError):
                			print "JSON error"
-		print "key: " + str(key)
+		#print "key: " + str(key)
 		
 		if key=="TurnCW" or key=="TurnCCW":
 			g_cost=6
