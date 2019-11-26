@@ -77,10 +77,10 @@ class Helper:
 		return g_cost
 	
     def get_heuristic(self,node_set,v1):
-            count=len(set(node_set))
-            if v1 not in node_set:
-                    count+=1
-            return 2*(24-count)
+        count=len(set(node_set))
+        if v1 not in node_set:
+                count+=1
+        return 2*(24-count)
 
 
 	def get_initial_state(self):
