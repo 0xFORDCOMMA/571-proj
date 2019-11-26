@@ -11,7 +11,7 @@ __contact__ = "aair.lab@asu.edu"
 __docformat__ = 'reStructuredText'
 
 import heapq
-from problem import * 
+from api_functions import * 
 import rospy
 from std_msgs.msg import String
 import numpy as np
@@ -54,15 +54,21 @@ class RandomWalk:
         '''
         Randomly choses an action to perform among possible actions
         '''
+        helper = Helper()
+        current_state = helper.get_initial_state()
         while True:
-            possible_next_states = self.helper.get_successor(self.current_state)
-            idx = random.randint(0, len(possible_next_states.items()) - 1)
-            action, state_cost = possible_next_states.items()[idx]
-            next_state, cost = state_cost
-            if next_state.x == -1 and next_state.y == -1:
-                continue
-            self.visited_list.add((next_state.x,next_state.y))
-            return next_state, action       
+            possible_next_states = helper.get_successor(current_state)
+
+            candidates = []
+            for key, values in possible_next_states.items():
+                if values.x<0 or values.y<0:
+                    continue
+                candidates.append((key,values))
+            selected = random.choice(candidates)
+            self.visited_list.add(tuple(selected[0]))
+            return selected[0], selected[1]
+
+
 
     def next_action(self):
         '''
