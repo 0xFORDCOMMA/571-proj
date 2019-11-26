@@ -66,7 +66,7 @@ class RandomWalk:
                 candidates.append((key,values))
             selected = random.choice(candidates)
             self.visited_list.add(tuple(selected[0]))
-            return selected[0], selected[1]
+            return selected[1], selected[0]
 
 
 
