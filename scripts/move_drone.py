@@ -17,7 +17,7 @@ import math
 import copy, json, time, os
 from dronekit import connect, Command, LocationGlobal
 from pymavlink import mavutil
-import Api_functions as api
+import api_functions as api
 def get_location_offset_meters(original_location, dNorth, dEast, alt):
     """
     Returns a LocationGlobal object containing the latitude/longitude `dNorth` and `dEast` metres from the

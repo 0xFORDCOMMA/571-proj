@@ -11,7 +11,7 @@ __contact__ = "aair.lab@asu.edu"
 __docformat__ = 'reStructuredText'
 
 import heapq
-import Api_functions 
+import api_functions 
 import rospy
 from std_msgs.msg import String
 import argparse
@@ -25,7 +25,7 @@ parser.add_argument('-c', help="Use custom heuristic function. No value needed."
 
 
 def ucs(use_custom_heuristic):
-    helper = Api_functions.Helper()
+    helper = api_functions.Helper()
     init_state = helper.get_initial_state()
     print(init_state)
     #goal_state = helper.get_goal_state()
@@ -99,7 +99,7 @@ def ucs(use_custom_heuristic):
 
 
 def astar(use_custom_heuristic):
-    helper = Api_functions.Helper()
+    helper = api_functions.Helper()
     init_state = helper.get_initial_state()
     print(init_state)
     #goal_state = helper.get_goal_state()
