@@ -58,7 +58,7 @@ apt-get update && apt-get install -y --allow-unauthenticated --no-install-recomm
     rm -rf /var/lib/apt/lists/*
 pip install --upgrade pip
 
-pip install numpy toml opencv-python
+pip install setup-tools numpy toml opencv-python
 
 bash -c "source /opt/ros/kinetic/setup.bash; mkdir -p /home/ubuntu/catkin_ws/src; cd ~/catkin_ws/; catkin_make"
 
