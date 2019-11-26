@@ -20,7 +20,7 @@ import time
 rospy.init_node("search_algorithms")
 publisher = rospy.Publisher("/actions", String, queue_size=10)
 parser = argparse.ArgumentParser()
-parser.add_argument('-a', help="Please mention algorithm to use. Possible arguments = {bfs, ucs, gbfs, astar}. Default value is bfs.", metavar='bfs', action='store', dest='algorithm', default="algorithm", type=str)
+parser.add_argument('-a', help="Please mention algorithm to use. Possible arguments = {ucs, astar}. Default value is ucs.", metavar='ucs', action='store', dest='algorithm', default="algorithm", type=str)
 parser.add_argument('-c', help="Use custom heuristic function. No value needed.", action='store_true', dest='custom_heuristic')
 
 
