@@ -64,7 +64,7 @@ bash -c "source /opt/ros/kinetic/setup.bash; mkdir -p /home/ubuntu/catkin_ws/src
 
 cd /home/ubuntu/catkin_ws/src
 
-git clone https://github.com/0xFORDCOMMA/571-proj.git
+git clone https://github.com/0xFORDCOMMA/571-proj.git ./group_13/
 
 git clone --recursive https://github.com/auman66/Firmware.git
 
