@@ -45,7 +45,7 @@ class Helper:
 				reef_obj=json.load(reef_file)
 			except (ValueError, KeyError, TypeError):
                			print "JSON error"
-		#print "key: " + str(key)
+		print "key: " + str(key)
 		
 		if key=="TurnCW" or key=="TurnCCW":
 			g_cost=6
@@ -58,8 +58,6 @@ class Helper:
 			x2=float(reef_obj[int(v1)][int(v2)]['x'])
 			y2=float(reef_obj[int(v1)][int(v2)]['y'])
 			z2=float(reef_obj[int(v1)][int(v2)]['z'])
-		
-					
 
 			g_cost=2*(math.sqrt(pow((x1-x2),2)+pow((y1-y2),2)+pow((z1-z2),2)))
 		elif key=="MoveF":
@@ -75,8 +73,6 @@ class Helper:
 					
 
 			g_cost=math.sqrt(pow((x1-x2),2)+pow((y1-y2),2)+pow((z1-z2),2))
-
-		
 		#print key
 		#print g_cost
 		return g_cost
@@ -129,7 +125,6 @@ class Helper:
 
 	def is_goal_state(self,visited):
 		Total_state=set([tuple(l) for l in self.get_all_states()])
-		#dup=Total_state
 		visited_set = set([tuple(v) for v in visited])
 
 		return len(Total_state.difference(visited_set)) == 0
