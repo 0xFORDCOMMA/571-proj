@@ -126,7 +126,10 @@ def astar(use_custom_heuristic):
         temp.append(list_1)
         temp.append(values)
         local_visited.append(init_state)
-        heapq.heappush(q3, (helper.get_cost(init_state,values.x,values.y,key), entry_count, temp,state_repr,local_visited))
+        heuristic_cost=helper.get_heuristic(state_repr,[values.x,values.y])
+        final_cost=heuristic_cost+helper.get_cost(init_state,values.x,values.y,key)
+        cost=helper.get_cost(init_state,values.x,values.y,key)
+        heapq.heappush(q3, (final_cost, values.x,values.y,key), entry_count, temp,state_repr,local_visited, cost))
         entry_count=entry_count+1
     while q3:
         cur_node = heapq.heappop(q3)
@@ -157,15 +160,17 @@ def astar(use_custom_heuristic):
                 local_visited=[]
                 list_1 = []
                 temp = []
-                cost = helper.get_cost(cur_node[2][1],values.x,values.y,key)+ cur_node[0]
                 
                 state_temp=cur_node[3]+[[values.x,values.y]]
                 local_visited=cur_node[4]+[cur_node[2][1]]
                 list_1.extend(cur_node[2][0])
                 list_1.extend(key.split())
+                heuristic_cost = helper.get_heuristic(cur_node[2][1], [values.x, values.y])
+                cost=helper.get_cost(init_state,values.x,values.y,key) + cur_node[5]
+                final_cost = heuristic_cost + cost
                 temp.append(list_1)
                 temp.append(values)
-                next = (cost, entry_count, temp,state_temp,local_visited)
+                next = (final_cost, entry_count, temp,state_temp,local_visited,cost)
                 if len(set([tuple(l) for l in state_temp])) > max_state:
                     max_state = len(set([tuple(l) for l in state_temp]))
                     print "Max Node" + str(max_state)
